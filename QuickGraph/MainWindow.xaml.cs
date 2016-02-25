@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using QG2.Annotations;
+using ORM.QuickGraph.Properties;
 
-namespace QG2
+namespace ORM.QuickGraph
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

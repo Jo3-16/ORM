@@ -7,8 +7,8 @@
     <ProjectGuid>{FA81277D-5CFC-4EED-8308-31C4C2D8E5DE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QG2</RootNamespace>
-    <AssemblyName>QG2</AssemblyName>
+    <RootNamespace>ORM.QuickGraph</RootNamespace>
+    <AssemblyName>ORM.QuickGraph</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -94,7 +94,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\EdgeModel.cs" />
-    <Compile Include="EdgeRouteToPathConverter.cs" />
+    <Compile Include="EdgeToPathConverter.cs" />
     <Compile Include="Controls\EdgeControl.cs" />
     <Compile Include="Controls\VertexControl.cs" />
     <Compile Include="GraphControl.cs" />

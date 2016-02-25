@@ -1,12 +1,13 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:QG2"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions">
+    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+    xmlns:quickGraph="clr-namespace:ORM.QuickGraph"
+    xmlns:local="clr-namespace:ORM.QuickGraph.Controls">
 
-    <local:EdgeRouteToPathConverter x:Key="RouteToPathConverter" />
-    <local:TextLayoutConverter x:Key="TextLayoutConverter"></local:TextLayoutConverter>
+    <quickGraph:EdgeToPathConverter x:Key="RouteToPathConverter" />
+    <quickGraph:TextLayoutConverter x:Key="TextLayoutConverter"></quickGraph:TextLayoutConverter>
 
     <Style x:Key="ImageButton"
            BasedOn="{StaticResource {x:Type Button}}"
@@ -159,7 +160,22 @@
 
                     <Viewbox>
                         <Grid Width="280" Height="200">
-                            <Ellipse Fill="CadetBlue"></Ellipse>
+                            <Ellipse StrokeDashCap="Round" StrokeThickness="3" StrokeDashArray="2,2" Fill="CadetBlue">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Style.Setters>
+                                            <Setter Property="Stroke" Value="Transparent"/>
+                                        </Style.Setters>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsSelected}" Value="True">
+                                                <DataTrigger.Setters>
+                                                    <Setter Property="Stroke" Value="Black"/>
+                                                </DataTrigger.Setters>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
 
                             <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,45,0,0" Orientation="Horizontal">
                                 <StackPanel>

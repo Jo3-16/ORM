@@ -3,12 +3,9 @@ using System.Linq;
 using System.Windows;
 using GraphSharp.Algorithms.Layout.Compound;
 using GraphSharp.Algorithms.Layout.Compound.FDP;
-using GraphSharp.Algorithms.Layout.Simple.FDP;
-using GraphSharp.Algorithms.Layout.Simple.Hierarchical;
-using GraphSharp.Algorithms.OverlapRemoval;
 using QuickGraph;
 
-namespace QG2
+namespace ORM.QuickGraph
 {
     public class LayoutFactory<TVertex, TEdge, TGraph>
         where TVertex : class

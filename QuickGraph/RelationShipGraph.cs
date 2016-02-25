@@ -1,7 +1,8 @@
 using System;
+using ORM.QuickGraph.Models;
 using QuickGraph;
 
-namespace QG2
+namespace ORM.QuickGraph
 {
     public class RelationShipGraph : BidirectionalGraph<VertextModel, EdgeModel>
     {

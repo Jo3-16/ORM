@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace QG2
+namespace ORM.QuickGraph.Controls
 {
     public class EdgeControl : Control
     {

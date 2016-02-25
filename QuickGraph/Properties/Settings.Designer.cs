@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace QG2.Properties {
+namespace ORM.QuickGraph.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

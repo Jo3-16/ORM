@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using ORM.QuickGraph.Models;
 
-namespace QG2
+namespace ORM.QuickGraph.Controls
 {
     public class VertexControl : Control
     {
@@ -21,6 +22,16 @@ namespace QG2
         public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
             "IsExpanded", typeof (bool), typeof (VertexControl), new PropertyMetadata(false));
 
+
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
+            "IsSelected", typeof (bool), typeof (VertexControl), new PropertyMetadata(default(bool)));
+
+        public bool IsSelected
+        {
+            get { return (bool) GetValue(IsSelectedProperty); }
+            set { SetValue(IsSelectedProperty, value); }
+        }
+
         public bool IsExpanded
         {
             get { return (bool) GetValue(IsExpandedProperty); }
@@ -36,9 +47,10 @@ namespace QG2
         public VertexControl(VertextModel vertex, Action<VertextModel,bool> onToggleExpand, Action<VertextModel> onAddVertex)
         {
             Vertex = vertex;
-            this.IsExpanded = !this.IsExpanded;
             this.onToggleExpand = onToggleExpand;
             this.onAddVertex = onAddVertex;
+
+          //  this.IsSelected = true;
         }
 
         public VertextModel Vertex { get; set; }

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using ORM.QuickGraph.Models;
 using QuickGraph.Algorithms;
 
-
-namespace QG2
+namespace ORM.QuickGraph
 {
     public static class GraphFactory
     {
@@ -78,8 +78,6 @@ namespace QG2
             graph.AddVerticesAndEdge(new EdgeModel(chris, gitarre));
             graph.AddVerticesAndEdge(new EdgeModel(chris, volleyball));
             graph.AddVerticesAndEdge(new EdgeModel(chris, schlafen));
-
-          
         }
 
         public static RelationShipGraph CreateSmallGraph()

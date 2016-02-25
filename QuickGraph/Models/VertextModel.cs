@@ -1,24 +1,26 @@
 using System.Diagnostics;
-using QG2;
 
-public enum VertexTypes
+namespace ORM.QuickGraph.Models
 {
-    Person,
-    Sport,
-    Ausrüstung
-}
-
-[DebuggerDisplay("{Name}")]
-public class VertextModel
-{
-    public VertextModel(VertexTypes type, string name)
+    public enum VertexTypes
     {
-        Type = type;
-        Name = name;
+        Person,
+        Sport,
+        Ausrüstung
     }
 
-    public VertexTypes Type { get; set; }
-    public string Name { get; set; }
+    [DebuggerDisplay("{Name}")]
+    public class VertextModel
+    {
+        public VertextModel(VertexTypes type, string name)
+        {
+            Type = type;
+            Name = name;
+        }
 
-    public bool IsExpanded { get; set; }
+        public VertexTypes Type { get; set; }
+        public string Name { get; set; }
+
+        public bool IsExpanded { get; set; }
+    }
 }

@@ -3,8 +3,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ORM.QuickGraph.Controls;
+using ORM.QuickGraph.Models;
 
-namespace QG2
+namespace ORM.QuickGraph
 {
     public class GraphControl : Grid
     {
@@ -21,9 +23,19 @@ namespace QG2
         {
             Graph.Updated += rg =>
             {
-               var oldPositions = this.Children.OfType<VertexControl>().ToDictionary(g => g.Vertex, GetPosition);
+            //   var oldPositions = this.Children.OfType<VertexControl>().ToDictionary(g => g.Vertex, GetPosition);
                 var verticesWithPositions2 = GraphFactory.CreateLayout(Graph, new Dictionary<VertextModel, Point>(0));
                 CreateChildren(verticesWithPositions2);
+
+                if (expandedVertex != null)
+                {
+                    var vertexControl = GetVertexControlFromVertexModel(expandedVertex);
+                    if (vertexControl != null)
+                    {
+                        vertexControl.IsSelected = true;
+                        vertexControl.BringIntoView();
+                    }
+                }
             };
 
             Refresh();
@@ -60,12 +72,12 @@ namespace QG2
         }
 
 
-        private Point GetPosition(FrameworkElement element)
-        {
-            //Canvas var pointD = new Point(GetLeft(element), GetTop(element));
-            var pointD = new Point(element.Margin.Left, element.Margin.Top);
-            return DtoW(pointD);
-        }
+        //private Point GetPosition(FrameworkElement element)
+        //{
+        //    //Canvas var pointD = new Point(GetLeft(element), GetTop(element));
+        //    var pointD = new Point(element.Margin.Left, element.Margin.Top);
+        //    return DtoW(pointD);
+        //}
 
         private void SetPosition(FrameworkElement element, Point position)
         {
@@ -74,8 +86,11 @@ namespace QG2
             element.Margin = new Thickness(newPos.X, newPos.Y, 0, 0);
         }
 
+        private VertextModel expandedVertex;
+
         private void ToggleExpand(VertextModel vertex, bool expand)
         {
+            expandedVertex = vertex;
             vertex.IsExpanded = expand;
             GraphFactory.ToggleExpandVertex(Graph,vertex,expand);
         }
@@ -107,7 +122,7 @@ namespace QG2
             return vertexControl;
         }
 
-        private VertexControl GetGuiVertexFromMyVertex(VertextModel vertextModel)
+        private VertexControl GetVertexControlFromVertexModel(VertextModel vertextModel)
         {
             return this.Children.OfType<VertexControl>().SingleOrDefault(c => Equals(vertextModel, c.Vertex));
         }
@@ -116,8 +131,8 @@ namespace QG2
         {
             var edgeControl = new EdgeControl
             {
-                Source = GetGuiVertexFromMyVertex(edgeModel.Source),
-                Target = GetGuiVertexFromMyVertex(edgeModel.Target),
+                Source = GetVertexControlFromVertexModel(edgeModel.Source),
+                Target = GetVertexControlFromVertexModel(edgeModel.Target),
                 SourceRole =  edgeModel.SourceRole,
                 TargetRole = edgeModel.TargetRole,
                 Foreground = Brushes.IndianRed,

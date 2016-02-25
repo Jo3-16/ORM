@@ -1,4 +1,4 @@
-namespace QG2
+namespace ORM.QuickGraph
 {
     public class Constants
     {
