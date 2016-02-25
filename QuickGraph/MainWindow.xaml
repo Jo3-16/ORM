@@ -1,0 +1,49 @@
+﻿<Window x:Class="QG2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:qg2="clr-namespace:QG2"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        mc:Ignorable="d"
+        Title="MainWindow" d:DesignHeight="100" d:DesignWidth="120" Height="850" Width="1100">
+    <Window.Resources>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <qg2:GraphControl Background="Beige" Graph="{Binding Graph}" x:Name="MyGraphCanvas">
+                <qg2:GraphControl.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"></ScaleTransform>
+                </qg2:GraphControl.LayoutTransform>
+            </qg2:GraphControl>
+        </ScrollViewer>
+        <Slider Name="ZoomSlider" Grid.Row="1" Minimum="0.1" Value="3" Maximum="15"></Slider>
+        <StackPanel  Grid.Row="2" Orientation="Horizontal" >
+            <Button Click="ButtonBase_OnClick" >ADD</Button>
+            <Button Content="Refresh">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <ei:CallMethodAction MethodName="Refresh" TargetObject="{Binding ElementName=MyGraphCanvas}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>
+
+
+
+
+
+
+

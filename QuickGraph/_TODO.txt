@@ -1,0 +1,20 @@
+Unterscheiden Person / Veranstalter
+
+Knoten markieren
+Knoten in die Mitte des Screen (Scroll to selected Node)n
+
+Verschieben von Knoten
+
+Knoten kreuzen (evtl)
+
+
+
+Knotextmenü auf Knoten
+
+Belastungstest
+
+
+//Version 2
+Nice to Have -> 
+Knoten fixieren
+Speichern
