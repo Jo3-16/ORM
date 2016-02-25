@@ -25,19 +25,15 @@ namespace ORM.QuickGraph
         {
             Graph.Updated += rg =>
             {
-            //   var oldPositions = this.Children.OfType<VertexControl>().ToDictionary(g => g.Vertex, GetPosition);
                 var verticesWithPositions2 = GraphFactory.CreateLayout(Graph, new Dictionary<VertextModel, Point>(0));
                 CreateChildren(verticesWithPositions2);
 
-                if (expandedVertex != null)
-                {
-                    var vertexControl = GetVertexControlFromVertexModel(expandedVertex);
-                    if (vertexControl != null)
-                    {
-                        vertexControl.IsSelected = true;
-                        vertexControl.BringIntoView();
-                    }
-                }
+                if (expandedVertex == null) return;
+                var vertexControl = GetVertexControlFromVertexModel(expandedVertex);
+
+                if (vertexControl == null) return;
+                SetSelection( vertexControl);
+                vertexControl.BringIntoView();
             };
 
             Refresh();
@@ -161,71 +157,61 @@ namespace ORM.QuickGraph
           //  return dtoWMatrix.Transform(point);
         }
 
-
-
         private VertexControl draggingVertex;
+        private Point dragMouseOffset;
 
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
+            var position = e.GetPosition(this);
 
-            //foreach (var result in Children.OfType<VertexControl>())
-            //{
+            VisualTreeHelper.HitTest(this, FilterCallback, ResultCallback, new PointHitTestParameters(position));
 
-            //      if(  VisualTreeHelper.HI(result, e.GetPosition(this)) ==  
-
-            //}
-
-            //   VisualTreeHelper.
-
-            //  VisualTreeHelper.HitTest(this,FilterCallback,ResultCallback, new PointHitTestParameters(e.GetPosition(this))  );
-
-
-
-            //      var hitTest = InputHitTest(e.GetPosition(this)) as FrameworkElement;
-            //if ((hitTest is VertexControl) == false)
-            //{
-            //    base.OnMouseLeftButtonDown(e);
-            //    return;
-            //}
-
-          //  draggingVertex = (VertexControl)hitTest;
-          //  draggingVertex.IsSelected = true;
+            if (draggingVertex == null)
+            {
+                SetSelection();
+            }
+            else
+            {
+                SetSelection(draggingVertex);
+                dragMouseOffset = e.GetPosition(draggingVertex);
+            }
         }
 
         private HitTestFilterBehavior FilterCallback(DependencyObject potentialHitTestTarget)
         {
-            if (potentialHitTestTarget is VertexControl)
-            {
-                return HitTestFilterBehavior.Continue;
-            }
+            return potentialHitTestTarget is VertexControl
+                ? HitTestFilterBehavior.ContinueSkipChildren
+                : HitTestFilterBehavior.ContinueSkipSelf;
+        }
 
-            else
+        private void SetSelection(params VertexControl[] vertices)
+        {
+            foreach (var vertex in Children.OfType<VertexControl>())
             {
-               return HitTestFilterBehavior.Continue;
+               vertex.IsSelected = vertices.Contains(vertex);
             }
         }
 
         private HitTestResultBehavior ResultCallback(HitTestResult result)
         {
-            if (result.VisualHit is VertexControl)
-            {
-                draggingVertex = (VertexControl)result.VisualHit;
-                draggingVertex.IsSelected = true;
-
-                return HitTestResultBehavior.Stop;
-            }
-            else
+            var hit = result.VisualHit as VertexControl;
+            if (hit == null)
             {
                 return HitTestResultBehavior.Continue;
             }
+
+            draggingVertex = hit;
+           
+            return HitTestResultBehavior.Stop;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (draggingVertex != null)
             {
-                SetPosition(draggingVertex, e.GetPosition(this));
+                var position = e.GetPosition(this);
+                draggingVertex.Margin = new Thickness( position.X - dragMouseOffset.X, position.Y - dragMouseOffset.Y, 0,0  );
             }
 
             base.OnMouseMove(e);
@@ -233,6 +219,7 @@ namespace ORM.QuickGraph
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
+            draggingVertex = null;
             base.OnMouseLeftButtonUp(e);
         }
     }

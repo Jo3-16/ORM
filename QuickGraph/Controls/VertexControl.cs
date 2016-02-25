@@ -69,12 +69,16 @@ namespace ORM.QuickGraph.Controls
 
         protected override GeometryHitTestResult HitTestCore(GeometryHitTestParameters hitTestParameters)
         {
-            return base.HitTestCore(hitTestParameters);
+            var geometryHitTestResult = base.HitTestCore(hitTestParameters);
+            return geometryHitTestResult;
         }
 
         protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
         {
-            return base.HitTestCore(hitTestParameters);
+            return new PointHitTestResult(this,hitTestParameters.HitPoint);
+
+            var hitTestResult = base.HitTestCore(hitTestParameters);
+            return hitTestResult;
         }
     }
 }

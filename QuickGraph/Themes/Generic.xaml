@@ -135,7 +135,7 @@
 
                     <Viewbox>
                         <Grid Width="280" Height="200">
-                            <Ellipse StrokeDashCap="Round" StrokeThickness="3" StrokeDashArray="2,2" Fill="CadetBlue">
+                            <Ellipse StrokeDashCap="Round" StrokeThickness="3" StrokeDashArray="2,2" Fill="CadetBlue" IsHitTestVisible="False">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
                                         <Style.Setters>
