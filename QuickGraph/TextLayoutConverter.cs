@@ -17,9 +17,7 @@ namespace ORM.QuickGraph
           //  var textWidth = values.Double(8);
           //  var textHeight = values.Double(9);
 
-            var middlepoint = new Point((sourceLeft + targetLeft) /2, (sourceTop + targetTop)/2);
-           
-
+            var middleOfEdege = new Point((sourceLeft + targetLeft) /2, (sourceTop + targetTop)/2);
 
             var dX = sourceLeft - targetLeft;
             var dY = sourceTop - targetTop;
@@ -51,7 +49,7 @@ namespace ORM.QuickGraph
 
             var newM = new Matrix();
             newM.Rotate(direction);
-            newM.Translate(middlepoint.X, middlepoint.Y);
+            newM.Translate(middleOfEdege.X, middleOfEdege.Y);
 
             return new MatrixTransform(newM);
 

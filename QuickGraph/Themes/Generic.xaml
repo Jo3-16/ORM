@@ -71,25 +71,6 @@
 
                                 <PathGeometry.Figures>
                                     <MultiBinding Converter="{StaticResource RouteToPathConverter}">
-                                        <!--<Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="Source.(local:MyGraphCanvas.Left)" />
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="Source.(local:MyGraphCanvas.Top)" />
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="Source.ActualWidth" />
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="Source.ActualHeight" />
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="Target.(local:MyGraphCanvas.Left)" />
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="Target.(local:MyGraphCanvas.Top)" />
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="Target.ActualWidth" />
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="Target.ActualHeight" />
-                                        <Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="RoutePoints" />-->
-
                                         <Binding RelativeSource="{RelativeSource TemplatedParent}"
                                                  Path="Source.Margin.Left" />
                                         <Binding RelativeSource="{RelativeSource TemplatedParent}"
@@ -106,19 +87,13 @@
                                                  Path="Target.ActualWidth" />
                                         <Binding RelativeSource="{RelativeSource TemplatedParent}"
                                                  Path="Target.ActualHeight" />
-                                        <!--<Binding RelativeSource="{RelativeSource TemplatedParent}"
-                                                 Path="RoutePoints" />-->
-
                                     </MultiBinding>
                                 </PathGeometry.Figures>
                             </PathGeometry>
                         </Path.Data>
                     </Path>
-
-                       
-                        <TextBlock Text="{TemplateBinding SourceRole}" FontSize="3"
+                        <TextBlock Text="{TemplateBinding SourceRole}" FontSize="4"
                                    Background="LightBlue" Padding="0" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top">
-
 
                             <TextBlock.RenderTransform>
                                 <MultiBinding Converter="{StaticResource TextLayoutConverter}">

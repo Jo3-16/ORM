@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using ORM.QuickGraph.Controls;
 using ORM.QuickGraph.Models;
@@ -159,5 +161,79 @@ namespace ORM.QuickGraph
           //  return dtoWMatrix.Transform(point);
         }
 
+
+
+        private VertexControl draggingVertex;
+
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+
+            //foreach (var result in Children.OfType<VertexControl>())
+            //{
+
+            //      if(  VisualTreeHelper.HI(result, e.GetPosition(this)) ==  
+
+            //}
+
+            //   VisualTreeHelper.
+
+            //  VisualTreeHelper.HitTest(this,FilterCallback,ResultCallback, new PointHitTestParameters(e.GetPosition(this))  );
+
+
+
+            //      var hitTest = InputHitTest(e.GetPosition(this)) as FrameworkElement;
+            //if ((hitTest is VertexControl) == false)
+            //{
+            //    base.OnMouseLeftButtonDown(e);
+            //    return;
+            //}
+
+          //  draggingVertex = (VertexControl)hitTest;
+          //  draggingVertex.IsSelected = true;
+        }
+
+        private HitTestFilterBehavior FilterCallback(DependencyObject potentialHitTestTarget)
+        {
+            if (potentialHitTestTarget is VertexControl)
+            {
+                return HitTestFilterBehavior.Continue;
+            }
+
+            else
+            {
+               return HitTestFilterBehavior.Continue;
+            }
+        }
+
+        private HitTestResultBehavior ResultCallback(HitTestResult result)
+        {
+            if (result.VisualHit is VertexControl)
+            {
+                draggingVertex = (VertexControl)result.VisualHit;
+                draggingVertex.IsSelected = true;
+
+                return HitTestResultBehavior.Stop;
+            }
+            else
+            {
+                return HitTestResultBehavior.Continue;
+            }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (draggingVertex != null)
+            {
+                SetPosition(draggingVertex, e.GetPosition(this));
+            }
+
+            base.OnMouseMove(e);
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonUp(e);
+        }
     }
 }
