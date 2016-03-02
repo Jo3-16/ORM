@@ -27,6 +27,7 @@ namespace ORM.QuickGraph
 
         private bool eventsOccuredWhileIgnored;
         private bool ignoreEvents;
+
         public bool IgnoreEvents
         {
             get { return ignoreEvents; }
@@ -65,27 +66,27 @@ namespace ORM.QuickGraph
             OnUpdated();
             base.OnVertexRemoved(args);
         }
-    }
 
-    public class EventSupressor : IDisposable
-    {
-        private readonly RelationShipGraph graph;
-        private bool disposed;
-  
-
-        public EventSupressor(RelationShipGraph graph)
+        public class EventSupressor : IDisposable
         {
-            this.graph = graph;
-            this.graph.IgnoreEvents = true;
-        }
+            private readonly RelationShipGraph graph;
+            private bool disposed;
 
-        public void Dispose()
-        {
-            if (disposed)
-                return;
 
-            graph.IgnoreEvents = false;
-            disposed = true;
+            public EventSupressor(RelationShipGraph graph)
+            {
+                this.graph = graph;
+                this.graph.IgnoreEvents = true;
+            }
+
+            public void Dispose()
+            {
+                if (disposed)
+                    return;
+
+                graph.IgnoreEvents = false;
+                disposed = true;
+            }
         }
     }
 }

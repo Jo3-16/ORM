@@ -8,78 +8,6 @@ namespace ORM.QuickGraph
 {
     public static class GraphFactory
     {
-        public static RelationShipGraph LastGraph { get; private set; }
-
-        public static RelationShipGraph CreateGraph()
-        {
-            var graph = new RelationShipGraph();
-
-            var gerhard = new VertextModel(VertexTypes.Person, "Gerhard");
-            var flo = new VertextModel(VertexTypes.Person, "Flo");
-            var chris = new VertextModel(VertexTypes.Person, "Chris");
-          //  var karlHeinz = new VertextModel(VertexTypes.Person, "Karl Heinz");
-
-            var fahrrad = new VertextModel(VertexTypes.Sport, "Fahrrad");
-            var krafttraining = new VertextModel(VertexTypes.Sport, "Krafttraining");
-            var kampfsport = new VertextModel(VertexTypes.Sport, "Kampfsport");
-          
-            var hantel = new VertextModel(VertexTypes.Ausrüstung, "LangHantel");
-            var hantelScheibe = new VertextModel(VertexTypes.Ausrüstung, "Hantel-Scheibe");
-            var verschluesse = new VertextModel(VertexTypes.Ausrüstung, "Verschlüsse");
-
-            graph.AddVertex(gerhard);
-            graph.AddVertex(flo);
-            graph.AddVertex(chris);
-        //    graph.AddVertex(karlHeinz);
-
-            graph.AddVertex(fahrrad);
-            graph.AddVertex(krafttraining);
-            graph.AddVertex(kampfsport);
-
-            graph.AddVertex(hantel);
-            graph.AddVertex(hantelScheibe);
-            graph.AddVertex(verschluesse);
-
-
-            graph.AddEdge(new EdgeModel(flo, fahrrad));
-            graph.AddEdge(new EdgeModel(gerhard, fahrrad));
-            graph.AddEdge(new EdgeModel(gerhard, krafttraining));
-
-            graph.AddEdge(new EdgeModel(gerhard, chris));
-            graph.AddEdge(new EdgeModel(chris, gerhard));
-
-
-            graph.AddEdge(new EdgeModel(krafttraining, kampfsport));
-            graph.AddEdge(new EdgeModel(kampfsport, krafttraining));
-
-            graph.AddEdge(new EdgeModel(krafttraining, hantel));
-            graph.AddEdge(new EdgeModel(hantel, hantelScheibe));
-            graph.AddEdge(new EdgeModel(hantel, verschluesse));
-
-            LastGraph = graph;
-
-            return graph;
-        }
-
-        public static void AddSomething(RelationShipGraph graph)
-        {
-            var chris = graph.Vertices.First(v => v.Name.Equals("Chris"));
-            var krafttraining = graph.Vertices.First(v => v.Name.Equals("Krafttraining"));
-            graph.AddEdge(new EdgeModel(chris, krafttraining));
-
-            var pflanzen = new VertextModel(VertexTypes.Sport, "Pflanzen");
-            var gitarre = new VertextModel(VertexTypes.Sport, "Gitarre");
-            var basketball = new VertextModel(VertexTypes.Sport, "Basketball");
-            var volleyball = new VertextModel(VertexTypes.Sport, "Volleyball");
-            var schlafen = new VertextModel(VertexTypes.Sport, "Schlafen");
-
-            graph.AddVerticesAndEdge(new EdgeModel(chris, basketball));
-            graph.AddVerticesAndEdge(new EdgeModel(chris, pflanzen));
-            graph.AddVerticesAndEdge(new EdgeModel(chris, gitarre));
-            graph.AddVerticesAndEdge(new EdgeModel(chris, volleyball));
-            graph.AddVerticesAndEdge(new EdgeModel(chris, schlafen));
-        }
-
         public static RelationShipGraph CreateSmallGraph()
         {
             var graph = new RelationShipGraph();
@@ -92,8 +20,7 @@ namespace ORM.QuickGraph
         public static void AddVertexTo(VertextModel parent, RelationShipGraph graph)
         {
             var child = GetOrCreateVertex(graph, "New Child");
-            graph.AddVerticesAndEdge(new EdgeModel(parent, child) { SourceRole = "SRole", TargetRole = "TRole" });
-          
+            graph.AddVerticesAndEdge(new EdgeModel(parent, child) { SourceRole = "Gemeinde", TargetRole = "Techniker" });
         }
 
 
@@ -109,8 +36,8 @@ namespace ORM.QuickGraph
                     {
                         graph.AddVerticesAndEdge(new EdgeModel(vertex, child)
                         {
-                            SourceRole = "SRole",
-                            TargetRole = "TRole"
+                            SourceRole = "Gemeinde",
+                            TargetRole = "Techniker"
                         });
                     }
                 }
@@ -118,7 +45,10 @@ namespace ORM.QuickGraph
                 {
                     foreach (var child in children)
                     {
-                        graph.RemoveEdge(new EdgeModel(vertex, child) {SourceRole = "SRole", TargetRole = "TRole"});
+                        graph.Edges
+                            .Where(e => e.Source.Equals(vertex) && e.Target.Equals(child))
+                            .ToList()
+                            .ForEach(e => graph.RemoveEdge(e));
                     }
 
                     foreach (var emptyVertex in graph.IsolatedVertices().ToArray())

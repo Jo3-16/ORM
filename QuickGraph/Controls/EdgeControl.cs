@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ORM.QuickGraph.Controls
 {
@@ -47,5 +48,16 @@ namespace ORM.QuickGraph.Controls
             get { return (string) GetValue(TargetRoleProperty); }
             set { SetValue(TargetRoleProperty, value); }
         }
+
+        public static readonly DependencyProperty SelectionBrushProperty = DependencyProperty.Register(
+    "SelectionBrush", typeof(Brush), typeof(EdgeControl), new PropertyMetadata(Brushes.Blue));
+
+        public Brush SelectionBrush
+        {
+            get { return (Brush)GetValue(SelectionBrushProperty); }
+            set { SetValue(SelectionBrushProperty, value); }
+        }
+
+
     }
 }

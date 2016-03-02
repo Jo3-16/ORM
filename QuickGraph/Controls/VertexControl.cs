@@ -27,6 +27,8 @@ namespace ORM.QuickGraph.Controls
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
             "IsSelected", typeof (bool), typeof (VertexControl), new PropertyMetadata(default(bool)));
 
+
+
         public bool IsSelected
         {
             get { return (bool) GetValue(IsSelectedProperty); }
@@ -50,8 +52,6 @@ namespace ORM.QuickGraph.Controls
             Vertex = vertex;
             this.onToggleExpand = onToggleExpand;
             this.onAddVertex = onAddVertex;
-
-          //  this.IsSelected = true;
         }
 
         public VertextModel Vertex { get; set; }
@@ -76,9 +76,6 @@ namespace ORM.QuickGraph.Controls
         protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
         {
             return new PointHitTestResult(this,hitTestParameters.HitPoint);
-
-            var hitTestResult = base.HitTestCore(hitTestParameters);
-            return hitTestResult;
         }
     }
 }

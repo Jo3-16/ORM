@@ -22,10 +22,7 @@ namespace ORM.QuickGraph
 
         protected override void OnSourceInitialized(EventArgs e)
         {
-           // var graph = GraphFactory.CreateGraph();
-            var graph = GraphFactory.CreateSmallGraph();
-            this.Graph = graph;
-
+            this.Graph = GraphFactory.CreateSmallGraph();
             base.OnSourceInitialized(e);
         }
 
@@ -46,11 +43,6 @@ namespace ORM.QuickGraph
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-          GraphFactory.AddSomething(GraphFactory.LastGraph);
         }
     }
  

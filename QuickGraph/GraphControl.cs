@@ -127,17 +127,18 @@ namespace ORM.QuickGraph
 
         private FrameworkElement CreateEdge(EdgeModel edgeModel)
         {
+            var source = GetVertexControlFromVertexModel(edgeModel.Source);
+            var target = GetVertexControlFromVertexModel(edgeModel.Target);
             var edgeControl = new EdgeControl
             {
-                Source = GetVertexControlFromVertexModel(edgeModel.Source),
-                Target = GetVertexControlFromVertexModel(edgeModel.Target),
+                Source = source,
+                Target = target,
                 SourceRole =  edgeModel.SourceRole,
                 TargetRole = edgeModel.TargetRole,
-                Foreground = Brushes.IndianRed,
-                ToolTip = $"SourceRole {edgeModel.SourceRole}, TargetRole {edgeModel.TargetRole}",
+                Foreground = Brushes.DarkRed,
+                ToolTip = $"{target.Caption} ist {edgeModel.SourceRole} für {source.Caption} \n{source.Caption} ist {edgeModel.TargetRole} für {target.Caption}"
             };
 
-           
             SetZIndex(edgeControl, 10);
 
             return edgeControl;

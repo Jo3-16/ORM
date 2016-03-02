@@ -29,7 +29,6 @@
         </ScrollViewer>
         <Slider Name="ZoomSlider" Grid.Row="1" Minimum="0.1" Value="3" Maximum="15"></Slider>
         <StackPanel  Grid.Row="2" Orientation="Horizontal" >
-            <Button Click="ButtonBase_OnClick" >ADD</Button>
             <Button Content="Refresh">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
