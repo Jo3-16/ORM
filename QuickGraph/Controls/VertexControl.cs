@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using ORM.QuickGraph.Models;
 
@@ -65,12 +66,6 @@ namespace ORM.QuickGraph.Controls
         public void AddVertex()
         {
             onAddVertex(Vertex);
-        }
-
-        protected override GeometryHitTestResult HitTestCore(GeometryHitTestParameters hitTestParameters)
-        {
-            var geometryHitTestResult = base.HitTestCore(hitTestParameters);
-            return geometryHitTestResult;
         }
 
         protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)

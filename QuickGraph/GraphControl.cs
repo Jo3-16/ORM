@@ -12,47 +12,47 @@ namespace ORM.QuickGraph
 {
     public class GraphControl : Grid
     {
-        public static readonly DependencyProperty GraphProperty = DependencyProperty.Register(
-            "Graph", typeof (RelationShipGraph), typeof (GraphControl), new PropertyMetadata(default(RelationShipGraph),(s,e)=> ((GraphControl)s).GraphChanged() ));
+        public static readonly DependencyProperty RelationshipInfoProperty = DependencyProperty.Register(
+            "RelationshipInfo", typeof (LayoutInfo), typeof (GraphControl),
+            new PropertyMetadata(default(LayoutInfo), (s, e) => ((GraphControl) s).GraphChanged()));
 
-        public RelationShipGraph Graph
+
+        private VertexControl draggingVertex;
+        private Point dragMouseOffset;
+        private VertextModel expandedVertex;
+        private Point offsetVector;
+
+        public LayoutInfo RelationshipInfo
         {
-            get { return (RelationShipGraph) GetValue(GraphProperty); }
-            set { SetValue(GraphProperty, value); }
+            get { return (LayoutInfo) GetValue(RelationshipInfoProperty); }
+            set { SetValue(RelationshipInfoProperty, value); }
         }
 
         private void GraphChanged()
         {
-            Graph.Updated += rg =>
+            CreateChildren(RelationshipInfo);
+
+            if (expandedVertex == null) return;
+            var vertexControl = GetVertexControlFromVertexModel(expandedVertex);
+
+            if (vertexControl == null) return;
+            SetSelection(vertexControl);
+            vertexControl.BringIntoView();
+        }
+
+        private void CreateChildren(LayoutInfo layoutInfo)
+        {
+
+          var  verticesWithPositions = layoutInfo.Layout;
+            if (verticesWithPositions.Any() == false)
             {
-                var verticesWithPositions2 = GraphFactory.CreateLayout(Graph, new Dictionary<VertextModel, Point>(0));
-                CreateChildren(verticesWithPositions2);
+                return;
+            }
 
-                if (expandedVertex == null) return;
-                var vertexControl = GetVertexControlFromVertexModel(expandedVertex);
-
-                if (vertexControl == null) return;
-                SetSelection( vertexControl);
-                vertexControl.BringIntoView();
-            };
-
-            Refresh();
-        }
-
-        public void Refresh()
-        {
-            var verticesWithPositions = GraphFactory.CreateLayout(Graph, new Dictionary<VertextModel, Point>(0));
-            CreateChildren(verticesWithPositions);
-        }
-
-        private Point offsetVector;
-
-        private void CreateChildren(IDictionary<VertextModel, Point> verticesWithPositions)
-        {
             if (verticesWithPositions == null) return;
 
             var minX = verticesWithPositions.Values.Min(p => p.X) - 10;
-            var minY = verticesWithPositions.Values.Min(p => p.Y) -10 ;
+            var minY = verticesWithPositions.Values.Min(p => p.Y) - 10;
 
             offsetVector = new Point(-minX, -minY);
 
@@ -61,48 +61,39 @@ namespace ORM.QuickGraph
                 ToList()
                 .Select(CreateVertex)
                 .ToList()
-                .ForEach(c => this.Children.Add(c));
+                .ForEach(c => Children.Add(c));
 
-            Graph.Edges
+            RelationshipInfo.Graph.Edges
                 .Select(CreateEdge)
                 .ToList()
-                .ForEach(e => this.Children.Add(e));
+                .ForEach(e => Children.Add(e));
         }
-
-
-        //private Point GetPosition(FrameworkElement element)
-        //{
-        //    //Canvas var pointD = new Point(GetLeft(element), GetTop(element));
-        //    var pointD = new Point(element.Margin.Left, element.Margin.Top);
-        //    return DtoW(pointD);
-        //}
 
         private void SetPosition(FrameworkElement element, Point position)
         {
             var newPos = WtoD(position);
-            //Canvas   SetTop(guiElement, postion.Y);SetLeft(guiElement, postion.X);
             element.Margin = new Thickness(newPos.X, newPos.Y, 0, 0);
         }
 
-        private VertextModel expandedVertex;
 
-        private void ToggleExpand(VertextModel vertex, bool expand)
+        public event Action<string, bool> ToggleExpand = (model, b) => { }; 
+        private void OnToggleExpand(VertextModel vertex, bool expand)
         {
             expandedVertex = vertex;
-            vertex.IsExpanded = expand;
-            GraphFactory.ToggleExpandVertex(Graph,vertex,expand);
+            ToggleExpand(vertex.Name, expand);
         }
 
-        private void AddVertex(VertextModel parent)
+        public event Action<string> AddVertex =model => {};
+        private void OnAddVertex(VertextModel parent)
         {
-            GraphFactory.AddVertexTo(parent, Graph);
+            AddVertex(parent.Name);
         }
 
         private FrameworkElement CreateVertex(KeyValuePair<VertextModel, Point> kvp)
         {
             var myVertex = kvp.Key;
 
-            var vertexControl = new VertexControl(myVertex,ToggleExpand,AddVertex)
+            var vertexControl = new VertexControl(myVertex, OnToggleExpand, OnAddVertex)
             {
                 Caption = myVertex.Name,
                 Background = Brushes.AliceBlue,
@@ -122,7 +113,7 @@ namespace ORM.QuickGraph
 
         private VertexControl GetVertexControlFromVertexModel(VertextModel vertextModel)
         {
-            return this.Children.OfType<VertexControl>().SingleOrDefault(c => Equals(vertextModel, c.Vertex));
+            return Children.OfType<VertexControl>().SingleOrDefault(c => Equals(vertextModel, c.Vertex));
         }
 
         private FrameworkElement CreateEdge(EdgeModel edgeModel)
@@ -133,10 +124,11 @@ namespace ORM.QuickGraph
             {
                 Source = source,
                 Target = target,
-                SourceRole =  edgeModel.SourceRole,
+                SourceRole = edgeModel.SourceRole,
                 TargetRole = edgeModel.TargetRole,
                 Foreground = Brushes.DarkRed,
-                ToolTip = $"{target.Caption} ist {edgeModel.SourceRole} für {source.Caption} \n{source.Caption} ist {edgeModel.TargetRole} für {target.Caption}"
+                ToolTip =
+                    $"{target.Caption} ist {edgeModel.SourceRole} für {source.Caption} \n{source.Caption} ist {edgeModel.TargetRole} für {target.Caption}"
             };
 
             SetZIndex(edgeControl, 10);
@@ -144,23 +136,10 @@ namespace ORM.QuickGraph
             return edgeControl;
         }
 
-        // Transform a point from world to device coordinates.
         private Point WtoD(Point point)
         {
             return new Point(point.X + offsetVector.X, point.Y + offsetVector.Y);
-         //   return wtoDMatrix.Transform(point);
         }
-
-        // Transform a point from device to world coordinates.
-        private Point DtoW(Point point)
-        {
-            return new Point(point.X - offsetVector.X, point.Y - offsetVector.Y);
-          //  return dtoWMatrix.Transform(point);
-        }
-
-        private VertexControl draggingVertex;
-        private Point dragMouseOffset;
-
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
@@ -186,13 +165,6 @@ namespace ORM.QuickGraph
                 : HitTestFilterBehavior.ContinueSkipSelf;
         }
 
-        private void SetSelection(params VertexControl[] vertices)
-        {
-            foreach (var vertex in Children.OfType<VertexControl>())
-            {
-               vertex.IsSelected = vertices.Contains(vertex);
-            }
-        }
 
         private HitTestResultBehavior ResultCallback(HitTestResult result)
         {
@@ -203,16 +175,26 @@ namespace ORM.QuickGraph
             }
 
             draggingVertex = hit;
-           
+
             return HitTestResultBehavior.Stop;
         }
+
+        private void SetSelection(params VertexControl[] vertices)
+        {
+            foreach (var vertex in Children.OfType<VertexControl>())
+            {
+                vertex.IsSelected = vertices.Contains(vertex);
+            }
+        }
+
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (draggingVertex != null)
             {
                 var position = e.GetPosition(this);
-                draggingVertex.Margin = new Thickness( position.X - dragMouseOffset.X, position.Y - dragMouseOffset.Y, 0,0  );
+                draggingVertex.Margin = new Thickness(position.X - dragMouseOffset.X, position.Y - dragMouseOffset.Y, 0,
+                    0);
             }
 
             base.OnMouseMove(e);

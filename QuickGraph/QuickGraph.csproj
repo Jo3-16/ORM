@@ -83,8 +83,12 @@
     </ApplicationDefinition>
     <Compile Include="Constants.cs" />
     <Compile Include="LayoutFactory.cs" />
+    <Compile Include="LayoutInfo.cs" />
     <Compile Include="Models\VertextModel.cs" />
+    <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="TextLayoutConverter.cs" />
+    <Compile Include="ToggleUndoRedoStep.cs" />
+    <Compile Include="UndRedo.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

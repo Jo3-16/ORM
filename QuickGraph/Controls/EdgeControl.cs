@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace ORM.QuickGraph.Controls
@@ -57,7 +58,5 @@ namespace ORM.QuickGraph.Controls
             get { return (Brush)GetValue(SelectionBrushProperty); }
             set { SetValue(SelectionBrushProperty, value); }
         }
-
-
     }
 }
