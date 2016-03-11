@@ -4,7 +4,7 @@ using QuickGraph;
 
 namespace ORM.RelationshipView
 {
-    public class RelationshipGraph : BidirectionalGraph<VertextModel, EdgeModel>
+    public class RelationshipGraph : BidirectionalGraph<VertexModel, EdgeModel>
     {
         public event Action<RelationshipGraph> Updated = g => { };
 
@@ -55,13 +55,13 @@ namespace ORM.RelationshipView
             base.OnEdgeRemoved(args);
         }
 
-        protected override void OnVertexAdded(VertextModel args)
+        protected override void OnVertexAdded(VertexModel args)
         {
             OnUpdated();
             base.OnVertexAdded(args);
         }
 
-        protected override void OnVertexRemoved(VertextModel args)
+        protected override void OnVertexRemoved(VertexModel args)
         {
             OnUpdated();
             base.OnVertexRemoved(args);

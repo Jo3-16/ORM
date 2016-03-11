@@ -22,7 +22,7 @@ namespace DemoApp
 
         protected override void OnSourceInitialized(EventArgs e)
         {
-            RelationshipViewModel.Init("Gerhard");
+            RelationshipViewModel.Init("165378");
             base.OnSourceInitialized(e);
         }
     }

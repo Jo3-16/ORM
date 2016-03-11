@@ -43,7 +43,7 @@
                 Grid.Row="1"
                 Maximum="15"
                 Minimum="0.1"
-                Value="3" />
+                Value="5" />
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Button Content="Home" IsEnabled="{Binding CanUndoToggle}">
                 <i:Interaction.Triggers>

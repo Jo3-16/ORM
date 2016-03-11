@@ -13,14 +13,14 @@ namespace ORM.RelationshipView
         private readonly RelationshipGraph graph;
         private readonly UndRedo<ToggleUndoRedoStep> undoRedo;
         private readonly DataAccess dataAccess;
-        private readonly LayoutFactory<VertextModel, EdgeModel, RelationshipGraph> layoutFactory;
+        private readonly LayoutFactory<VertexModel, EdgeModel, RelationshipGraph> layoutFactory;
 
         public Action RelationshipInfoUpdated = () => { };
       
         public GraphFactory()
         {
             graph = new RelationshipGraph();
-            layoutFactory = new LayoutFactory<VertextModel, EdgeModel, RelationshipGraph>();
+            layoutFactory = new LayoutFactory<VertexModel, EdgeModel, RelationshipGraph>();
             undoRedo = new UndRedo<ToggleUndoRedoStep>();
             UpdateRelationshipInfo();
             dataAccess = new DataAccess(graph);
@@ -36,33 +36,33 @@ namespace ORM.RelationshipView
             }
         }
 
-        private void InvokeOnGraph(Action<RelationshipGraph> action, IDictionary<VertextModel,Point> layout=null )
+        private void InvokeOnGraph(Action<RelationshipGraph> action, IDictionary<VertexModel,Point> layout=null )
         {
             action(graph);
             UpdateRelationshipInfo(layout);
         }
 
-        public void UpdateRelationshipInfo(IDictionary<VertextModel, Point> layout = null)
+        public void UpdateRelationshipInfo(IDictionary<VertexModel, Point> layout = null)
         {
-            if (layout != null && layout.Keys.OrderBy(_ => _.Name).SequenceEqual(graph.Vertices.OrderBy(_ => _.Name)))
+            if (layout != null && layout.Keys.OrderBy(_ => _.VertexId).SequenceEqual(graph.Vertices.OrderBy(_ => _.VertexId)))
             {
                 RelationshipInfo = new RelationshipInfo(graph, layout);
             }
             else
             {
-                RelationshipInfo = new RelationshipInfo(graph, layoutFactory.ComputeLayout(graph, new Dictionary<VertextModel, Point>(0)));
+                RelationshipInfo = new RelationshipInfo(graph, layoutFactory.ComputeLayout(graph, new Dictionary<VertexModel, Point>(0)));
             }
         }
 
         public void InitGraph(string name)
         {
-            var firstVertex = new VertextModel(VertexTypes.Person, name) {IsExpanded = true};
+            var firstVertex = dataAccess.CreateVertex(name); //  new VertexModel(VertexTypes.Person, name) {IsExpanded = true};
 
             InvokeOnGraph(graph =>
             {
                 graph.Clear();
                 graph.AddVertex(firstVertex);
-                ToggleExpandInternal(firstVertex.Name, true);
+              //  ToggleExpandInternal(firstVertex.VertexId, true);
             });
         }
 
@@ -116,7 +116,7 @@ namespace ORM.RelationshipView
         }
 
 
-        private void UndoRedoToggle(string vertexId, bool expand, IDictionary<VertextModel, Point> layout)
+        private void UndoRedoToggle(string vertexId, bool expand, IDictionary<VertexModel, Point> layout)
         {
             InvokeOnGraph(graph => ToggleExpandInternal(vertexId, expand), layout);
         }
@@ -124,7 +124,7 @@ namespace ORM.RelationshipView
        
         private void ToggleExpandInternal(string vertexId, bool expand)
         {
-            var vertex = dataAccess.GetOrCreateVertex(vertexId);
+            var vertex = dataAccess.GetVertex(vertexId);
             vertex.IsExpanded = expand;
 
             using (graph.SupressEvents())
@@ -132,7 +132,10 @@ namespace ORM.RelationshipView
                 if (expand)
                 {
                     var edges = dataAccess.GetConnectedEdgesForVertex(vertexId).ToList();
-                    edges.ForEach( e=> graph.AddVerticesAndEdge(e));
+
+                    var egdgesToAdd = edges.Where(e => graph.Edges.Contains(e) == false).ToList();
+
+                    egdgesToAdd.ForEach( e=> graph.AddVerticesAndEdge(e));
                 }
                 else
                 {

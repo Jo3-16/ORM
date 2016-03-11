@@ -84,7 +84,7 @@
     <Compile Include="DataAccess.cs" />
     <Compile Include="LayoutFactory.cs" />
     <Compile Include="Models\EdgeModel.cs" />
-    <Compile Include="Models\VertextModel.cs" />
+    <Compile Include="Models\VertexModel.cs" />
     <Compile Include="RelationshipInfo.cs" />
     <Compile Include="RelationshipView.xaml.cs">
       <DependentUpon>RelationshipView.xaml</DependentUpon>
@@ -146,6 +146,10 @@
     <ProjectReference Include="..\DevDataBridge\DevDataBridge.csproj">
       <Project>{8C7753E8-DB0D-42AD-A664-2A2E1BFB927E}</Project>
       <Name>DevDataBridge</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ODISDataBridge\ODISDataBridge.csproj">
+      <Project>{7CA147D4-EA46-482C-A85E-C5506F633BA0}</Project>
+      <Name>ODISDataBridge</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

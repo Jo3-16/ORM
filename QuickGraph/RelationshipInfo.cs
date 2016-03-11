@@ -6,7 +6,7 @@ namespace ORM.RelationshipView
 {
     public class RelationshipInfo
     {
-        public RelationshipInfo(RelationshipGraph graph, IDictionary<VertextModel, Point> layout)
+        public RelationshipInfo(RelationshipGraph graph, IDictionary<VertexModel, Point> layout)
         {
             Graph = graph;
             Layout = layout;
@@ -14,6 +14,6 @@ namespace ORM.RelationshipView
 
         public RelationshipGraph Graph { get; set; }
 
-        public IDictionary<VertextModel,Point> Layout { get; set; }
+        public IDictionary<VertexModel,Point> Layout { get; set; }
     }
 }

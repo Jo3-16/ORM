@@ -18,7 +18,7 @@ namespace ORM.RelationshipView
 
         private VertexControl draggingVertex;
         private Point dragMouseOffset;
-        private VertextModel expandedVertex;
+        private VertexModel expandedVertex;
         private Point offsetVector;
 
         public RelationshipInfo RelationshipInfo
@@ -69,31 +69,29 @@ namespace ORM.RelationshipView
         }
 
         public event Action<string, bool> ToggleExpand = (model, b) => { }; 
-        private void OnToggleExpand(VertextModel vertex, bool expand)
+        private void OnToggleExpand(VertexModel vertex, bool expand)
         {
             expandedVertex = vertex;
-            ToggleExpand(vertex.Name, expand);
+            ToggleExpand(vertex.VertexId, expand);
         }
 
         public event Action<string> AddVertex =model => {};
-        private void OnAddVertex(VertextModel parent)
+        private void OnAddVertex(VertexModel parent)
         {
-            AddVertex(parent.Name);
+            AddVertex(parent.VertexId);
         }
 
-        private FrameworkElement CreateVertex(KeyValuePair<VertextModel, Point> kvp)
+        private FrameworkElement CreateVertex(KeyValuePair<VertexModel, Point> kvp)
         {
             var myVertex = kvp.Key;
 
             var vertexControl = new VertexControl(myVertex, OnToggleExpand, OnAddVertex)
             {
-                Caption = myVertex.Name,
                 Background = Brushes.AliceBlue,
                 Width = Constants.Width,
                 Height = Constants.Height,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                IsExpanded = myVertex.IsExpanded
             };
 
             SetZIndex(vertexControl, 10000);
@@ -103,9 +101,9 @@ namespace ORM.RelationshipView
             return vertexControl;
         }
 
-        private VertexControl GetVertexControlFromVertexModel(VertextModel vertextModel)
+        private VertexControl GetVertexControlFromVertexModel(VertexModel vertexModel)
         {
-            return Children.OfType<VertexControl>().SingleOrDefault(c => Equals(vertextModel, c.Vertex));
+            return Children.OfType<VertexControl>().SingleOrDefault(c => Equals(vertexModel, c.Vertex));
         }
 
         private FrameworkElement CreateEdge(EdgeModel edgeModel)

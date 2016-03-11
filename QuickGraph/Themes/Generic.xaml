@@ -262,26 +262,24 @@
                                         VerticalAlignment="Top"
                                         Orientation="Horizontal">
                                 <StackPanel>
-                                    <TextBlock FontSize="22"
+                                    <TextBlock FontSize="20"
+                                               MaxWidth="190"
                                                Foreground="Black"
+                                               HorizontalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTip="{TemplateBinding Caption}"
                                                Text="{TemplateBinding Caption}" />
                                     <TextBlock HorizontalAlignment="Right"
                                                FontSize="16"
                                                Foreground="Black"
-                                               Text="016097665792" />
+                                               Text="{TemplateBinding StandardPhone}" />
+                                    <TextBlock HorizontalAlignment="Right"
+                                               FontSize="12"
+                                               Foreground="Black"
+                                               Text="{TemplateBinding VertexId}" />
                                 </StackPanel>
-                                <Grid Background="Transparent">
-                                    <Grid.ToolTip>
-                                        <TextBlock>
-                                            <Span>More Info</Span>
-                                            <LineBreak />
-                                            <Span>ContactData Adress Street</Span>
-                                            <LineBreak />
-                                            <Span>EMail blablalba@bla.com....</Span>
-                                            <LineBreak />
-                                            <Span>Tel 0176453</Span>
-                                        </TextBlock>
-                                    </Grid.ToolTip>
+                                <Grid Background="Transparent" ToolTip="{TemplateBinding Address}">
+                             
                                     <Path Width="40"
                                           Height="40"
                                           Margin="10,0,0,0"

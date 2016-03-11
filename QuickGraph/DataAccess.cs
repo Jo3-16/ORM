@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Contracts;
 using DevDataBridge;
+using ODISDataBridge;
 using ORM.RelationshipView.Models;
 
 namespace ORM.RelationshipView
@@ -16,7 +17,9 @@ namespace ORM.RelationshipView
         public DataAccess(RelationshipGraph graph)
         {
             this.graph = graph;
-            this.dataBridge = new DataBridgeDev();
+            //TODO Andreas - hier kannst du umschalten auf Demo-Daten
+           // this.dataBridge = new DataBridgeDev();
+            this.dataBridge = new DataBridgeODIS();
         }
 
         public EdgeModel AddChild(string parentId)
@@ -27,7 +30,7 @@ namespace ORM.RelationshipView
             return new EdgeModel(parent, child) { SourceRole = "Gemeinde", TargetRole = "Techniker" };
         }
 
-        public IEnumerable<VertextModel> GetConnectedVerticesForVertex(string vertexId)
+        public IEnumerable<VertexModel> GetConnectedVerticesForVertex(string vertexId)
         {
             var childrenIds = dataBridge.GetConnectedVerticesForVertex(vertexId);
             var children = childrenIds.Select(GetOrCreateVertex);
@@ -45,21 +48,21 @@ namespace ORM.RelationshipView
             });
         }
 
-        private VertextModel CreateVertex(string vertexId)
+        public VertexModel CreateVertex(string vertexId)
         {
             var vertexData = dataBridge.GetVertexData(vertexId);
-            return new VertextModel(VertexTypes.Person, vertexData.VertexId);
+            return new VertexModel(VertexTypes.Person, vertexData.VertexId, vertexData.FullName, vertexData.AddressImage, vertexData.StandardPhone);
         }
 
-        public VertextModel GetOrCreateVertex(string vertexId)
+        public VertexModel GetOrCreateVertex(string vertexId)
         {
-            var existingVertex = graph.Vertices.FirstOrDefault(v => v.Name.Equals(vertexId));
+            var existingVertex = graph.Vertices.FirstOrDefault(v => v.VertexId.Equals(vertexId));
             return existingVertex ?? CreateVertex(vertexId);
         }
 
-        public VertextModel GetVertex(string vertexId)
+        public VertexModel GetVertex(string vertexId)
         {
-            var existingVertex = graph.Vertices.FirstOrDefault(v => v.Name.Equals(vertexId));
+            var existingVertex = graph.Vertices.FirstOrDefault(v => v.VertexId.Equals(vertexId));
             if (existingVertex == null)
             {
                 throw new ArgumentOutOfRangeException(nameof(vertexId),$"No vertex for name {vertexId}");

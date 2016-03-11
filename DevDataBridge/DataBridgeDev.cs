@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Contracts;
 
 namespace DevDataBridge
@@ -11,7 +7,7 @@ namespace DevDataBridge
     {
         public IEnumerable<string> GetConnectedVerticesForVertex(string vertexId)
         {
-            if (vertexId == "Gerhard")
+            if (vertexId == "165378")
             {
                 yield return "Fahrrad";
                 yield return "Krafttraining";
@@ -39,7 +35,7 @@ namespace DevDataBridge
 
         public VertexData GetVertexData(string vertxId)
         {
-          return new VertexData(vertxId);
+          return new VertexData(vertxId,vertxId,"","");
         }
 
         public string AddChild(string parentId)

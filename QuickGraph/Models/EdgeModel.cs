@@ -2,9 +2,9 @@ using QuickGraph;
 
 namespace ORM.RelationshipView.Models
 {
-    public class EdgeModel : IEdge<VertextModel>
+    public class EdgeModel : IEdge<VertexModel>
     {
-        public EdgeModel(VertextModel source, VertextModel target)
+        public EdgeModel(VertexModel source, VertexModel target)
         {
             Source = source;
             Target = target;
@@ -13,12 +13,26 @@ namespace ORM.RelationshipView.Models
 
         public string SourceRole { get; set; }
         public string TargetRole { get; set; }
-        public VertextModel Source { get; }
-        public VertextModel Target { get; }
+        public VertexModel Source { get; }
+        public VertexModel Target { get; }
 
         protected bool Equals(EdgeModel other)
         {
-            return string.Equals(SourceRole, other.SourceRole) && string.Equals(TargetRole, other.TargetRole) && Equals(Source, other.Source) && Equals(Target, other.Target);
+            //TODO Role wieder reinnehmen
+
+            var isSameEdge =
+                //string.Equals(SourceRole, other.SourceRole) &&
+                //string.Equals(TargetRole, other.TargetRole) &&
+                Equals(Source, other.Source) && 
+                Equals(Target, other.Target);
+            var isSameEdgeReverse =
+                //string.Equals(SourceRole, other.TargetRole) &&
+                //string.Equals(TargetRole, other.SourceRole) &&
+                Equals(Source, other.Target) &&
+                Equals(Target, other.Source);
+
+            return isSameEdge || isSameEdgeReverse;
+
         }
 
         public override bool Equals(object obj)

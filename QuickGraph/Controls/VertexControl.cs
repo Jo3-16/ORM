@@ -9,8 +9,9 @@ namespace ORM.RelationshipView.Controls
 {
     public class VertexControl : Control
     {
-        private readonly Action<VertextModel, bool> onToggleExpand;
-        private readonly Action<VertextModel> onAddVertex;
+        private readonly Action<VertexModel, bool> onToggleExpand;
+        private readonly Action<VertexModel> onAddVertex;
+        private VertexModel vertex;
 
         static VertexControl()
         {
@@ -20,6 +21,24 @@ namespace ORM.RelationshipView.Controls
         public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register(
             "Caption", typeof (string), typeof (VertexControl), new PropertyMetadata(default(string)));
 
+        public static readonly DependencyProperty StandardPhoneProperty = DependencyProperty.Register(
+            "StandardPhone", typeof (string), typeof (VertexControl), new PropertyMetadata(default(string)));
+
+        public string StandardPhone
+        {
+            get { return (string) GetValue(StandardPhoneProperty); }
+            set { SetValue(StandardPhoneProperty, value); }
+        }
+
+        public static readonly DependencyProperty AddressProperty = DependencyProperty.Register(
+            "Address", typeof (string), typeof (VertexControl), new PropertyMetadata(default(string)));
+
+        public string Address
+        {
+            get { return (string) GetValue(AddressProperty); }
+            set { SetValue(AddressProperty, value); }
+        }
+
 
         public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
             "IsExpanded", typeof (bool), typeof (VertexControl), new PropertyMetadata(false));
@@ -27,6 +46,15 @@ namespace ORM.RelationshipView.Controls
 
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
             "IsSelected", typeof (bool), typeof (VertexControl), new PropertyMetadata(default(bool)));
+
+        public static readonly DependencyProperty VertexIdProperty = DependencyProperty.Register(
+            "VertexId", typeof (string), typeof (VertexControl), new PropertyMetadata(default(string)));
+
+        public string VertexId
+        {
+            get { return (string) GetValue(VertexIdProperty); }
+            set { SetValue(VertexIdProperty, value); }
+        }
 
 
 
@@ -48,14 +76,27 @@ namespace ORM.RelationshipView.Controls
             set { SetValue(CaptionProperty, value); }
         }
 
-        public VertexControl(VertextModel vertex, Action<VertextModel,bool> onToggleExpand, Action<VertextModel> onAddVertex)
+
+        public VertexControl(VertexModel vertex, Action<VertexModel,bool> onToggleExpand, Action<VertexModel> onAddVertex)
         {
             Vertex = vertex;
             this.onToggleExpand = onToggleExpand;
             this.onAddVertex = onAddVertex;
         }
 
-        public VertextModel Vertex { get; set; }
+        public VertexModel Vertex
+        {
+            get { return vertex; }
+            set
+            {
+                vertex = value;
+                StandardPhone = vertex.StandardPhone;
+                Caption = vertex.FullName;
+                IsExpanded = vertex.IsExpanded;
+                VertexId = vertex.VertexId;
+                Address = vertex.AddressImage;
+            }
+        }
 
         public void ToggleExpand()
         {
