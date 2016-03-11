@@ -1,12 +1,12 @@
 using System;
-using ORM.QuickGraph.Models;
+using ORM.RelationshipView.Models;
 using QuickGraph;
 
-namespace ORM.QuickGraph
+namespace ORM.RelationshipView
 {
-    public class RelationShipGraph : BidirectionalGraph<VertextModel, EdgeModel>
+    public class RelationshipGraph : BidirectionalGraph<VertextModel, EdgeModel>
     {
-        public event Action<RelationShipGraph> Updated = g => { };
+        public event Action<RelationshipGraph> Updated = g => { };
 
         public void OnUpdated()
         {
@@ -69,11 +69,11 @@ namespace ORM.QuickGraph
 
         public class EventSupressor : IDisposable
         {
-            private readonly RelationShipGraph graph;
+            private readonly RelationshipGraph graph;
             private bool disposed;
 
 
-            public EventSupressor(RelationShipGraph graph)
+            public EventSupressor(RelationshipGraph graph)
             {
                 this.graph = graph;
                 this.graph.IgnoreEvents = true;

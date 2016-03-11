@@ -5,7 +5,7 @@ using GraphSharp.Algorithms.Layout.Compound;
 using GraphSharp.Algorithms.Layout.Compound.FDP;
 using QuickGraph;
 
-namespace ORM.QuickGraph
+namespace ORM.RelationshipView
 {
     public class LayoutFactory<TVertex, TEdge, TGraph>
         where TVertex : class
@@ -17,6 +17,11 @@ namespace ORM.QuickGraph
         {
             IDictionary<TVertex, Size> oldSizes = graph.Vertices.ToDictionary(v => v,
                 v => new Size(Constants.Width, Constants.Height));
+
+            if (graph.Vertices.Any() == false)
+            {
+                return new Dictionary<TVertex, Point>(0);
+            }
 
             var layoutAlgorithm = GetCompoundFDPLayoutAlgorithm(graph, oldPositions, oldSizes);
 

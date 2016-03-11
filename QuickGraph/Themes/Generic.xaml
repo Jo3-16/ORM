@@ -2,14 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    xmlns:local="clr-namespace:ORM.QuickGraph.Controls"
-                    xmlns:quickGraph="clr-namespace:ORM.QuickGraph">
+                    xmlns:relationshipView="clr-namespace:ORM.RelationshipView"
+                    xmlns:local="clr-namespace:ORM.RelationshipView.Controls">
 
-    <quickGraph:EdgeToPathConverter x:Key="RouteToPathConverter" />
-    <quickGraph:RenderRotateConverter x:Key="RenderRotateConverter" />
-    <quickGraph:LengthConverter x:Key="LengthConverter" />
-    <quickGraph:MarginConverter x:Key="MarginConverter" />
-    <quickGraph:TextRotateConverter x:Key="TextRotateConverter" />
+    <relationshipView:EdgeToPathConverter x:Key="RouteToPathConverter" />
+    <relationshipView:RenderRotateConverter x:Key="RenderRotateConverter" />
+    <relationshipView:LengthConverter x:Key="LengthConverter" />
+    <relationshipView:MarginConverter x:Key="MarginConverter" />
+    <relationshipView:TextRotateConverter x:Key="TextRotateConverter" />
 
     <Style x:Key="ImageButton"
            BasedOn="{StaticResource {x:Type Button}}"
@@ -61,8 +61,8 @@
     <Style x:Key="EdgeArrow" TargetType="Path">
         <Style.Setters>
             <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Foreground}" />
-            <Setter Property="Width" Value="{x:Static quickGraph:Constants.FontSize}" />
-            <Setter Property="Height" Value="{x:Static quickGraph:Constants.FontSize}" />
+            <Setter Property="Width" Value="{x:Static relationshipView:Constants.FontSize}" />
+            <Setter Property="Height" Value="{x:Static relationshipView:Constants.FontSize}" />
             <Setter Property="Stretch" Value="Uniform" />
         </Style.Setters>
         <Style.Triggers>
@@ -83,7 +83,7 @@
 
     <Style x:Key="EdgeLabel" TargetType="TextBlock">
         <Style.Setters>
-            <Setter Property="FontSize" Value="{x:Static quickGraph:Constants.FontSize}" />
+            <Setter Property="FontSize" Value="{x:Static relationshipView:Constants.FontSize}" />
             <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Foreground}" />
             <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
             <Setter Property="RenderTransform">

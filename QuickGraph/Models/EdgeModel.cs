@@ -1,6 +1,6 @@
 using QuickGraph;
 
-namespace ORM.QuickGraph.Models
+namespace ORM.RelationshipView.Models
 {
     public class EdgeModel : IEdge<VertextModel>
     {

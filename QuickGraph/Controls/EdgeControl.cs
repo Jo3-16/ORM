@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace ORM.QuickGraph.Controls
+namespace ORM.RelationshipView.Controls
 {
     public class EdgeControl : Control
     {
@@ -57,7 +57,5 @@ namespace ORM.QuickGraph.Controls
             get { return (Brush)GetValue(SelectionBrushProperty); }
             set { SetValue(SelectionBrushProperty, value); }
         }
-
-
     }
 }

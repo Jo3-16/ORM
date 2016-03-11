@@ -1,48 +1,142 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using ORM.QuickGraph.Models;
+using ORM.RelationshipView.Models;
 using QuickGraph.Algorithms;
 
-namespace ORM.QuickGraph
+namespace ORM.RelationshipView
 {
-    public static class GraphFactory
+    public class GraphFactory
     {
-        public static RelationShipGraph CreateSmallGraph()
+        private RelationshipInfo relationshipInfo;
+        private readonly RelationshipGraph graph;
+        private readonly UndRedo<ToggleUndoRedoStep> undoRedo;
+        private readonly LayoutFactory<VertextModel, EdgeModel, RelationshipGraph> layoutFactory;
+
+        public Action RelationshipInfoUpdated = () => { };
+        private readonly DataBridge dataBridge;
+
+        public GraphFactory()
         {
-            var graph = new RelationShipGraph();
-            var gerhard = new VertextModel(VertexTypes.Person, "Gerhard") { IsExpanded = true};
-            graph.AddVertex(gerhard);
-            ToggleExpandVertex(graph, gerhard, true);
-            return graph;
+            graph = new RelationshipGraph();
+            layoutFactory = new LayoutFactory<VertextModel, EdgeModel, RelationshipGraph>();
+            undoRedo = new UndRedo<ToggleUndoRedoStep>();
+            UpdateRelationshipInfo();
+            dataBridge = new DataBridge(this.graph);
         }
 
-        public static void AddVertexTo(VertextModel parent, RelationShipGraph graph)
+        public RelationshipInfo RelationshipInfo
         {
-            var child = GetOrCreateVertex(graph, "New Child");
-            graph.AddVerticesAndEdge(new EdgeModel(parent, child) { SourceRole = "Gemeinde", TargetRole = "Techniker" });
+            get { return relationshipInfo; }
+            private set
+            {
+                relationshipInfo = value;
+                RelationshipInfoUpdated();
+            }
+        }
+
+        private void InvokeOnGraph(Action<RelationshipGraph> action, IDictionary<VertextModel,Point> layout=null )
+        {
+            action(graph);
+            UpdateRelationshipInfo(layout);
+        }
+
+        public void UpdateRelationshipInfo(IDictionary<VertextModel, Point> layout = null)
+        {
+            if (layout != null && layout.Keys.OrderBy(_ => _.Name).SequenceEqual(graph.Vertices.OrderBy(_ => _.Name)))
+            {
+                RelationshipInfo = new RelationshipInfo(graph, layout);
+            }
+            else
+            {
+                RelationshipInfo = new RelationshipInfo(graph, layoutFactory.ComputeLayout(graph, new Dictionary<VertextModel, Point>(0)));
+            }
+        }
+
+        public void InitGraph(string name)
+        {
+            var firstVertex = new VertextModel(VertexTypes.Person, name) {IsExpanded = true};
+
+            InvokeOnGraph(graph =>
+            {
+                graph.Clear();
+                graph.AddVertex(firstVertex);
+                ToggleExpandInternal(firstVertex.Name, true);
+            });
+        }
+
+        public void AddVertexTo(string parentId)
+        { 
+            var edgeModel = dataBridge.AddChild(parentId);
+
+            InvokeOnGraph(graph =>
+            {
+                
+                graph.AddVerticesAndEdge(edgeModel);
+            });
+        }
+
+        public void ToggleExpandVertex(string vertexId, bool expand)
+        {
+            undoRedo.ClearRedoStack();
+            undoRedo.SetUndoStep(new ToggleUndoRedoStep(vertexId,expand,RelationshipInfo.Layout));
+
+            InvokeOnGraph(graph => ToggleExpandInternal(vertexId, expand));
+
+        }
+
+        public bool CanUndoToggle => undoRedo.CanUndoToggle;
+        public bool CanRedoToggle => undoRedo.CanRedoToggle;
+
+        public void UndoToggle()
+        {
+            var step = undoRedo.GetUndoStep();
+
+            var vertexId = step.VertexId;
+            var expand = step.Expand;
+            var layout = step.Layout;
+
+           undoRedo.SetRedoStep(new ToggleUndoRedoStep(vertexId,expand, RelationshipInfo.Layout));
+
+            UndoRedoToggle(vertexId, !expand, layout);
+        }
+
+        public void RedoToggle()
+        {
+            var step = undoRedo.GetRedoStep();
+
+            var vertexId = step.VertexId;
+            var expand = step.Expand;
+            var layout = step.Layout;
+
+            undoRedo.SetUndoStep( new ToggleUndoRedoStep(vertexId, expand, RelationshipInfo.Layout));
+
+            UndoRedoToggle(vertexId, expand, layout);
         }
 
 
-        public static void ToggleExpandVertex(RelationShipGraph graph, VertextModel vertex, bool expand)
+        private void UndoRedoToggle(string vertexId, bool expand, IDictionary<VertextModel, Point> layout)
         {
+            InvokeOnGraph(graph => ToggleExpandInternal(vertexId, expand), layout);
+        }
+
+       
+        private void ToggleExpandInternal(string vertexId, bool expand)
+        {
+            var vertex = dataBridge.GetOrCreateVertex(vertexId);
+            vertex.IsExpanded = expand;
+
             using (graph.SupressEvents())
             {
-                var children = GetConnectedVerticesForVertex(graph, vertex);
-
                 if (expand)
                 {
-                    foreach (var child in children)
-                    {
-                        graph.AddVerticesAndEdge(new EdgeModel(vertex, child)
-                        {
-                            SourceRole = "Gemeinde",
-                            TargetRole = "Techniker"
-                        });
-                    }
+                    var edges = dataBridge.GetConnectedEdgesForVertex(vertexId).ToList();
+                    edges.ForEach( e=> graph.AddVerticesAndEdge(e));
                 }
                 else
                 {
+                    var children = dataBridge.GetConnectedVerticesForVertex(vertexId);
                     foreach (var child in children)
                     {
                         graph.Edges
@@ -57,48 +151,6 @@ namespace ORM.QuickGraph
                     }
                 }
             }
-        }
-
-        private static IEnumerable<VertextModel> GetConnectedVerticesForVertex(RelationShipGraph graph, VertextModel vertex)
-        {
-            if (vertex.Name == "Gerhard")
-            {
-                yield return GetOrCreateVertex(graph, "Fahrrad");
-                yield return GetOrCreateVertex(graph, "Krafttraining");
-            }
-
-            if (vertex.Name == "Krafttraining")
-            {
-                yield return GetOrCreateVertex(graph,  "Chris");
-                yield return GetOrCreateVertex(graph,  "LangHantel");
-            }
-            if (vertex.Name == "Chris")
-            {
-                yield return GetOrCreateVertex( graph,  "Pflanzen");
-                yield return GetOrCreateVertex( graph,  "Gitarre");
-                yield return GetOrCreateVertex( graph,  "Basketball");
-                yield return GetOrCreateVertex( graph,  "Volleyball");
-                yield return GetOrCreateVertex( graph,  "Schlafen");
-            }
-            if (vertex.Name == "LangHantel")
-            {
-                yield return GetOrCreateVertex(graph,  "Hantel-Scheibe");
-                yield return GetOrCreateVertex(graph,  "Verschlüsse");
-            }
-        }
-
-        private static VertextModel GetOrCreateVertex(RelationShipGraph graph, string name)
-        {
-            var existingVertex = graph.Vertices.FirstOrDefault(v => v.Name.Equals(name));
-            return existingVertex ?? new VertextModel(VertexTypes.Person, name);
-        }
-
-
-        public static IDictionary<VertextModel, Point> CreateLayout(RelationShipGraph graph,
-            IDictionary<VertextModel, Point> oldPositions)
-        {
-            var specialGraphFactory = new LayoutFactory<VertextModel, EdgeModel, RelationShipGraph>();
-           return specialGraphFactory.ComputeLayout(graph, oldPositions);
         }
     }
 }

@@ -2,9 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using ORM.QuickGraph.Models;
+using ORM.RelationshipView.Models;
 
-namespace ORM.QuickGraph.Controls
+namespace ORM.RelationshipView.Controls
 {
     public class VertexControl : Control
     {
@@ -65,12 +65,6 @@ namespace ORM.QuickGraph.Controls
         public void AddVertex()
         {
             onAddVertex(Vertex);
-        }
-
-        protected override GeometryHitTestResult HitTestCore(GeometryHitTestParameters hitTestParameters)
-        {
-            var geometryHitTestResult = base.HitTestCore(hitTestParameters);
-            return geometryHitTestResult;
         }
 
         protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)

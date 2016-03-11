@@ -1,4 +1,4 @@
-namespace ORM.QuickGraph
+namespace ORM.RelationshipView
 {
     public class Constants
     {
