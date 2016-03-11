@@ -139,18 +139,23 @@ namespace ORM.RelationshipView
                 }
                 else
                 {
-                    var children = dataAccess.GetConnectedVerticesForVertex(vertexId);
-                    foreach (var child in children)
+                    dataAccess.GetConnectedEdgesForVertex(vertexId)
+                        .ToList()
+                        .ForEach(e =>
                     {
-                        graph.Edges
-                            .Where(e => e.Source.Equals(vertex) && e.Target.Equals(child))
-                            .ToList()
-                            .ForEach(e => graph.RemoveEdge(e));
-                    }
+                        graph.RemoveEdge(e);
+                    });
 
+       
                     foreach (var emptyVertex in graph.IsolatedVertices().ToArray())
                     {
                         graph.RemoveVertex(emptyVertex);
+                    }
+
+                    if (!graph.Vertices.Any())
+                    {
+                        //TODO Hack
+                       this.InitGraph("165378");
                     }
                 }
             }

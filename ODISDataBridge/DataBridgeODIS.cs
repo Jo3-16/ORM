@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Contracts;
 using Odis.AppService.Common.DTO.Address;
@@ -27,26 +24,6 @@ namespace ODISDataBridge
             InitConnection();
         }
 
-        private IEnumerable<string> GetRelationShipsForAdress(string adress)
-        {
-            OdisAddressServiceClient proxyAsync = null;
-            IEnumerable<string> relationShipIds;
-            try
-            {
-                proxyAsync = odicConnector.AddressServiceAsync;
-                var relationships = proxyAsync.GetRelationships(int.Parse(adress), RelationshipDirection.All, true);
-                relationShipIds = relationships.Take(5).Select(r => r.CounterPartAddressId.ToString());
-                proxyAsync.Close();
-            }
-            catch (Exception)
-            {
-                proxyAsync?.Abort();
-                throw;
-            }
-
-            return relationShipIds.Distinct();
-        }
-
         private VertexData GetDataFromAdressId(string adressId)
         {
             OdisAddressServiceClient proxyAsync = null;
@@ -55,7 +32,7 @@ namespace ODISDataBridge
                 proxyAsync = odicConnector.AddressServiceAsync;
                 var adress = proxyAsync.GetAddress(int.Parse(adressId), false);
 
-                return new VertexData(adressId, adress.FullName, adress.StandardPhone, adress.AddressImage);
+                return new VertexData(adressId, adress.FullName, adress.StandardPhone, adress.AddressImage,"","");
             }
             catch (Exception)
             {
@@ -68,20 +45,48 @@ namespace ODISDataBridge
             } 
         }
 
-
-        public IEnumerable<string> GetConnectedVerticesForVertex(string vertexId)
+        private IEnumerable<VertexData> GetRelationShipsForAdress2(string adress)
         {
-           return GetRelationShipsForAdress(vertexId);
-        }
-
-        public VertexData GetVertexData(string vertxId)
-        {
-            if (vertxId.Equals("NewChild"))
+            OdisAddressServiceClient proxyAsync = null;
+            IEnumerable<VertexData> relationShipIds;
+            try
             {
-                return new VertexData("NewChild", "NewChild", "","");
+                proxyAsync = odicConnector.AddressServiceAsync;
+                var relationships = proxyAsync.GetRelationships(int.Parse(adress), RelationshipDirection.Outgoing, true);
+                relationShipIds = relationships
+                    .Take(5)
+                    .Select(r =>
+                    new VertexData(r.CounterPartAddressId.ToString(),
+                        r.CounterPartAddress.FullName,
+                        r.CounterPartAddress.StandardPhone,
+                        r.CounterPartAddress.AddressImage,
+                        r.Type.Name,
+                        r.ReverseType.Name));
+                ;
+                proxyAsync.Close();
+            }
+            catch (Exception)
+            {
+                proxyAsync?.Abort();
+                throw;
             }
 
-            return GetDataFromAdressId(vertxId);
+            return relationShipIds.Distinct();
+        }
+
+        public IEnumerable<VertexData> GetConnectedVerticesForVertex(string vertexId)
+        {
+            return GetRelationShipsForAdress2(vertexId);
+        }
+
+        public VertexData GetVertexData(string vertexId)
+        {
+            if (vertexId.Equals("NewChild"))
+            {
+                return new VertexData("NewChild", "NewChild", "","","","");
+            }
+
+            return GetDataFromAdressId(vertexId);
         }
 
         public string AddChild(string parentId)

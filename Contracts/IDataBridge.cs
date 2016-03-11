@@ -8,9 +8,10 @@ namespace Contracts
 {
     public interface IDataBridge
     {
-        IEnumerable<string> GetConnectedVerticesForVertex(string vertexId);
+      //  IEnumerable<string> GetConnectedVertexIdsForVertex(string vertexId);
+        IEnumerable<VertexData> GetConnectedVerticesForVertex(string vertexId);
 
-        VertexData GetVertexData(string vertxId);
+        VertexData GetVertexData(string vertexId);
 
         string AddChild(string parentId);
     }

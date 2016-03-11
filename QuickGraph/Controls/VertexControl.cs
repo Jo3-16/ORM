@@ -89,12 +89,12 @@ namespace ORM.RelationshipView.Controls
             get { return vertex; }
             set
             {
-                vertex = value;
+                vertex        = value;
                 StandardPhone = vertex.StandardPhone;
-                Caption = vertex.FullName;
-                IsExpanded = vertex.IsExpanded;
-                VertexId = vertex.VertexId;
-                Address = vertex.AddressImage;
+                Caption       = vertex.FullName;
+                IsExpanded    = vertex.IsExpanded;
+                VertexId      = vertex.VertexId;
+                Address       = vertex.AddressImage +"r\n"+ vertex.StandardPhone;
             }
         }
 

@@ -18,7 +18,7 @@ namespace ORM.RelationshipView
         {
             this.graph = graph;
             //TODO Andreas - hier kannst du umschalten auf Demo-Daten
-           // this.dataBridge = new DataBridgeDev();
+         //   this.dataBridge = new DataBridgeDemo();
             this.dataBridge = new DataBridgeODIS();
         }
 
@@ -30,22 +30,23 @@ namespace ORM.RelationshipView
             return new EdgeModel(parent, child) { SourceRole = "Gemeinde", TargetRole = "Techniker" };
         }
 
-        public IEnumerable<VertexModel> GetConnectedVerticesForVertex(string vertexId)
-        {
-            var childrenIds = dataBridge.GetConnectedVerticesForVertex(vertexId);
-            var children = childrenIds.Select(GetOrCreateVertex);
-            return children;
-        }
-
         public IEnumerable<EdgeModel> GetConnectedEdgesForVertex(string vertexId)
         {
             var vertex = GetVertex(vertexId);
-            var children = GetConnectedVerticesForVertex(vertexId);
-            return children.Select(child => new EdgeModel(vertex, child)
+            var children = dataBridge.GetConnectedVerticesForVertex(vertexId);
+           
+            foreach (var vertexData in children)
             {
-                SourceRole = "Gemeinde",
-                TargetRole = "Techniker"
-            });
+                var childVertex = graph.Vertices.FirstOrDefault(v => v.VertexId.Equals(vertexData.VertexId))
+                    ?? new VertexModel(VertexTypes.Person, vertexData.VertexId, vertexData.FullName, vertexData.AddressImage, vertexData.StandardPhone); 
+               
+                   yield return  new EdgeModel(vertex, childVertex)
+                   {
+                       SourceRole = vertexData.OtherRole,
+                       TargetRole = vertexData.MyRole
+                   };
+      
+            }
         }
 
         public VertexModel CreateVertex(string vertexId)

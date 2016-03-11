@@ -257,7 +257,7 @@
                                 </Ellipse.Style>
                             </Ellipse>
 
-                            <StackPanel Margin="0,45,0,0"
+                            <StackPanel Margin="0,75,0,0"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Orientation="Horizontal">
@@ -273,15 +273,15 @@
                                                FontSize="16"
                                                Foreground="Black"
                                                Text="{TemplateBinding StandardPhone}" />
-                                    <TextBlock HorizontalAlignment="Right"
+                                    <!--<TextBlock HorizontalAlignment="Right"
                                                FontSize="12"
                                                Foreground="Black"
-                                               Text="{TemplateBinding VertexId}" />
+                                               Text="{TemplateBinding VertexId}" />-->
                                 </StackPanel>
                                 <Grid Background="Transparent" ToolTip="{TemplateBinding Address}">
                              
-                                    <Path Width="40"
-                                          Height="40"
+                                    <Path Width="32"
+                                          Height="32"
                                           Margin="10,0,0,0"
                                           Data="M400.949,269.212C411.685,269.212 420.402,271.884 426.803,277.181 433.834,283.041 437.56,291.149 437.56,300.711 437.56,304.742 437.56,313.226 413.298,394.268 383.11,495.747 375.798,532.871 375.237,545.622 378.304,542.62 391.668,533.48 422.209,504.84L430.9,496.639 463.039,527.997 453.545,536.903C419.134,569.291 394.408,589.586 378.048,598.96 360.612,608.899 346.268,613.774 334.194,613.774 322.29,613.774 312.089,609.648 304.754,601.772 297.558,594.039 293.9,583.683 293.9,570.932 293.9,538.966 312.046,464.626 349.334,343.88 344.155,343.599 334.991,350.771 307.803,377.255L300.021,384.894 264.676,357.52 273.744,347.49C298.917,319.835 322.357,299.821 343.521,287.868 365.718,275.307 384.54,269.212 400.949,269.212z M400.252,132.95C428.055,132.95 450.583,155.499 450.583,183.203 450.583,211.047 428.055,233.5 400.252,233.5 372.423,233.5 349.961,211.047 349.961,183.203 349.961,155.499 372.423,132.95 400.252,132.95z M384.002,75.14C213.374,75.14 75.0918,213.423 75.0918,384.002 75.0918,554.581 213.374,692.861 384.002,692.861 554.53,692.861 692.814,554.581 692.814,384.002 692.814,213.423 554.53,75.14 384.002,75.14z M384.002,0C595.689,0 768,172.266 768,384.002 768,595.736 595.689,768 384.002,768 172.22,768 0,595.736 0,384.002 0,172.266 172.22,0 384.002,0z"
                                           Fill="#FF000000"
@@ -291,17 +291,17 @@
                             </StackPanel>
 
                             <Rectangle Height="2"
-                                       Margin="10,55,10,0"
+                                       Margin="20,140,20,0"
                                        HorizontalAlignment="Stretch"
-                                       VerticalAlignment="Center"
+                                       VerticalAlignment="Top"
                                        Fill="Black" />
 
-                            <StackPanel Margin="20"
+                            <StackPanel Margin="20,145,20,0"
                                         HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
+                                        VerticalAlignment="Top"
                                         Orientation="Horizontal">
 
-                                <Button Name="Expand" Style="{StaticResource ImageButton}">
+                                <Button Name="Expand" ToolTip="Expand" Style="{StaticResource ImageButton}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <ei:CallMethodAction MethodName="ToggleExpand" TargetObject="{Binding RelativeSource={RelativeSource TemplatedParent}}" />
@@ -309,8 +309,8 @@
                                     </i:Interaction.Triggers>
                                     <Button.Content>
 
-                                        <Path Width="40"
-                                              Height="40"
+                                        <Path Width="32"
+                                              Height="32"
                                               Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type Button}},
                                                              Path=Foreground}"
                                               Stretch="Uniform">
@@ -332,14 +332,15 @@
 
                                 <Button Name="Add"
                                         Margin="20,0,0,0"
+                                        ToolTip="Add"
                                         Style="{StaticResource ImageButton}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <ei:CallMethodAction MethodName="AddVertex" TargetObject="{Binding RelativeSource={RelativeSource TemplatedParent}}" />
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
-                                    <Path Width="40"
-                                          Height="40"
+                                    <Path Width="32"
+                                          Height="32"
                                           Data="M9.3440921,4.0100005L11.916929,4.0100005 11.916929,9.4114404 17.318,9.4114404 17.318,11.984521 11.916929,11.984521 11.916929,17.386002 9.3440921,17.386002 9.3440921,11.984521 3.9430002,11.984521 3.9430002,9.4114404 9.3440921,9.4114404z M10.66645,2.0872412C5.9269768,2.0872411 2.0857208,5.9282988 2.0857207,10.6665 2.0857208,15.404711 5.9269768,19.245839 10.66645,19.245839 15.403383,19.245839 19.24453,15.404711 19.24453,10.6665 19.24453,5.9282988 15.403383,2.0872411 10.66645,2.0872412z M10.66645,0C16.546468,0 21.333001,4.7851903 21.333001,10.6665 21.333001,16.54789 16.546468,21.333 10.66645,21.333 4.7837429,21.333 0,16.54789 0,10.6665 0,4.7851903 4.7837429,0 10.66645,0z"
                                           Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type Button}},
                                                          Path=Foreground}"

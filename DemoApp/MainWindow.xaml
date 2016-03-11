@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:relationshipView="clr-namespace:ORM.RelationshipView;assembly=ORM.RelationshipView"
-        Title="ORM"
+        Title="ODIS Relationship Visualization DEMO"
         Width="725"
         Height="550"
         mc:Ignorable="d">

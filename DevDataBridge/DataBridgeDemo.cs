@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Contracts;
 
 namespace DevDataBridge
 {
-    public class DataBridgeDev : IDataBridge
+    public class DataBridgeDemo : IDataBridge
     {
-        public IEnumerable<string> GetConnectedVerticesForVertex(string vertexId)
+        public IEnumerable<string> GetConnectedVertexIdsForVertex(string vertexId)
         {
             if (vertexId == "165378")
             {
@@ -33,9 +34,14 @@ namespace DevDataBridge
             }
         }
 
-        public VertexData GetVertexData(string vertxId)
+        public IEnumerable<VertexData> GetConnectedVerticesForVertex(string vertexId)
         {
-          return new VertexData(vertxId,vertxId,"","");
+            return GetConnectedVertexIdsForVertex(vertexId).Select(GetVertexData);
+        }
+
+        public VertexData GetVertexData(string vertexId)
+        {
+          return new VertexData(vertexId,vertexId,"","","Pastor","Gemeinde");
         }
 
         public string AddChild(string parentId)
