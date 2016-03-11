@@ -81,10 +81,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="DataBridge.cs" />
+    <Compile Include="DataAccess.cs" />
     <Compile Include="LayoutFactory.cs" />
-    <Compile Include="RelationshipInfo.cs" />
+    <Compile Include="Models\EdgeModel.cs" />
     <Compile Include="Models\VertextModel.cs" />
+    <Compile Include="RelationshipInfo.cs" />
     <Compile Include="RelationshipView.xaml.cs">
       <DependentUpon>RelationshipView.xaml</DependentUpon>
     </Compile>
@@ -92,7 +93,6 @@
     <Compile Include="TextLayoutConverter.cs" />
     <Compile Include="ToggleUndoRedoStep.cs" />
     <Compile Include="UndRedo.cs" />
-    <Compile Include="Models\EdgeModel.cs" />
     <Compile Include="EdgeToPathConverter.cs" />
     <Compile Include="Controls\EdgeControl.cs" />
     <Compile Include="Controls\VertexControl.cs" />
@@ -108,7 +108,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RelationShipGraph.cs" />
+    <Compile Include="RelationshipGraph.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -126,6 +126,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -136,6 +137,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Contracts.csproj">
+      <Project>{DB6D385B-79C1-43A4-855B-96015453F40A}</Project>
+      <Name>Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DevDataBridge\DevDataBridge.csproj">
+      <Project>{8C7753E8-DB0D-42AD-A664-2A2E1BFB927E}</Project>
+      <Name>DevDataBridge</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

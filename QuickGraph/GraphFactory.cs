@@ -12,18 +12,18 @@ namespace ORM.RelationshipView
         private RelationshipInfo relationshipInfo;
         private readonly RelationshipGraph graph;
         private readonly UndRedo<ToggleUndoRedoStep> undoRedo;
+        private readonly DataAccess dataAccess;
         private readonly LayoutFactory<VertextModel, EdgeModel, RelationshipGraph> layoutFactory;
 
         public Action RelationshipInfoUpdated = () => { };
-        private readonly DataBridge dataBridge;
-
+      
         public GraphFactory()
         {
             graph = new RelationshipGraph();
             layoutFactory = new LayoutFactory<VertextModel, EdgeModel, RelationshipGraph>();
             undoRedo = new UndRedo<ToggleUndoRedoStep>();
             UpdateRelationshipInfo();
-            dataBridge = new DataBridge(this.graph);
+            dataAccess = new DataAccess(graph);
         }
 
         public RelationshipInfo RelationshipInfo
@@ -68,7 +68,7 @@ namespace ORM.RelationshipView
 
         public void AddVertexTo(string parentId)
         { 
-            var edgeModel = dataBridge.AddChild(parentId);
+            var edgeModel = dataAccess.AddChild(parentId);
 
             InvokeOnGraph(graph =>
             {
@@ -124,19 +124,19 @@ namespace ORM.RelationshipView
        
         private void ToggleExpandInternal(string vertexId, bool expand)
         {
-            var vertex = dataBridge.GetOrCreateVertex(vertexId);
+            var vertex = dataAccess.GetOrCreateVertex(vertexId);
             vertex.IsExpanded = expand;
 
             using (graph.SupressEvents())
             {
                 if (expand)
                 {
-                    var edges = dataBridge.GetConnectedEdgesForVertex(vertexId).ToList();
+                    var edges = dataAccess.GetConnectedEdgesForVertex(vertexId).ToList();
                     edges.ForEach( e=> graph.AddVerticesAndEdge(e));
                 }
                 else
                 {
-                    var children = dataBridge.GetConnectedVerticesForVertex(vertexId);
+                    var children = dataAccess.GetConnectedVerticesForVertex(vertexId);
                     foreach (var child in children)
                     {
                         graph.Edges
