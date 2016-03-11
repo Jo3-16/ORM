@@ -68,13 +68,6 @@ namespace ORM.RelationshipView
                 .ForEach(e => Children.Add(e));
         }
 
-        private void SetPosition(FrameworkElement element, Point position)
-        {
-            var newPos = WtoD(position);
-            element.Margin = new Thickness(newPos.X, newPos.Y, 0, 0);
-        }
-
-
         public event Action<string, bool> ToggleExpand = (model, b) => { }; 
         private void OnToggleExpand(VertextModel vertex, bool expand)
         {
@@ -135,9 +128,27 @@ namespace ORM.RelationshipView
             return edgeControl;
         }
 
+        private void SetPosition(FrameworkElement element, Point position)
+        {
+            var newPos = WtoD(position);
+            element.Margin = new Thickness(newPos.X, newPos.Y, 0, 0);
+        }
+
         private Point WtoD(Point point)
         {
             return new Point(point.X + offsetVector.X, point.Y + offsetVector.Y);
+        }
+
+        private Point GetPosition(FrameworkElement element)
+        {
+            var position = new Point(element.Margin.Left, element.Margin.Top);
+            var newPos = DtoW(position);
+            return newPos;
+        }
+
+        private Point DtoW(Point point)
+        {
+            return new Point(point.X - offsetVector.X, point.Y - offsetVector.Y);
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -201,6 +212,12 @@ namespace ORM.RelationshipView
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
+            if (draggingVertex != null)
+            {
+                var position = GetPosition(draggingVertex);
+                this.RelationshipInfo.Layout[draggingVertex.Vertex] = position;
+            }
+
             draggingVertex = null;
             base.OnMouseLeftButtonUp(e);
         }
